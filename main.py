@@ -5,6 +5,8 @@ from telegram.ext import (
     CallbackQueryHandler, ContextTypes, filters
 )
 from openai import OpenAI
+from news_module import show_news_menu, get_news_handlers
+
 
 # Загрузка переменных окружения из Replit Secrets
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
@@ -91,6 +93,11 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         print(f"Ошибка OpenAI: {e}")
         await update.message.reply_text("Произошла ошибка при обращении к OpenAI.")
+
+# Новостной модуль
+app.add_handler(CommandHandler("news", show_news_menu))
+for handler in get_news_handlers():
+    app.add_handler(handler)
 
 # Запуск приложения
 def main():
